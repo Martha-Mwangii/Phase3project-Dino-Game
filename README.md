@@ -20,8 +20,8 @@ This is a Python-based recreation of the Chrome Dino Game using Pygame, featurin
    - SQLite3 (included with Python)
 
 2. **Clone the Repository**:
-   git clone <repository-url>
-   cd chrome-dino-game
+   - git clone <[repository-url](https://github.com/Martha-Mwangii/Phase3project-Dino-Game)>
+   - cd chrome-dino-game
 
 3. **Directory Structure**:
    Ensure the Assets folder is present with subfolders (Dino, Cactus, Bird, Other, Sounds) containing the required images and audio files.
