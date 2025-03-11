@@ -43,26 +43,38 @@ def delete_score(score_id):
     conn.commit()
     conn.close()
 
+# In database.py
 def clear_scores():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM high_scores")
+    cursor.execute("DROP TABLE IF EXISTS high_scores")  # Drop the table
+    cursor.execute('''
+        CREATE TABLE high_scores (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            score INTEGER NOT NULL,
+            date TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')  # Recreate the table
     conn.commit()
     conn.close()
+    print("High scores cleared and table reset")
 
-'''# Update a score for a specific ID
+# Update a score for a specific ID
 def update_score(score_id, new_score):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     try:
         cursor.execute("UPDATE high_scores SET score = ? WHERE id = ?", (new_score, score_id))
-        conn.commit()
         if cursor.rowcount == 0:
             print(f"Warning: No score found with id {score_id}")
+        else:
+            conn.commit()
+            print(f"Successfully updated score for id {score_id} to {new_score}")
     except sqlite3.Error as e:
         print(f"Database error: {e}")
     finally:
-        conn.close()'''
+        conn.close()
+        
 '''def delete_score(score_id):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -75,4 +87,14 @@ def update_score(score_id, new_score):
         print(f"Database error: {e}")
     finally:
         conn.close()'''
+
+
+
+'''def clear_scores():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM high_scores")
+    conn.commit()
+    conn.close()
+'''
 

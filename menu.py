@@ -1,4 +1,4 @@
-#menu.py
+'''#menu.py
 import pygame
 import os
 import sys
@@ -92,17 +92,21 @@ def menu(screen, death_count, points=0):
 
     # Return False if the loop exits without a key press (e.g when window is closed)
     #safety measure in case the loop exits unexpectedly
-    return False
+    return False'''
 
-'''import pygame
+import pygame
 import os
 import sys
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, DINO_DIR, OTHER_DIR, FONT_PATH, FONT_SIZE
-from database import init_db, add_score, get_high_score, clear_scores, update_score
+from database import init_db, add_score, get_high_score, clear_scores, update_score, delete_score
 from test_db import get_top_scores  # Import get_top_scores
 
 def menu(screen, death_count, points=0):
+    # Use the default font for main game text
     FONT = pygame.font.Font(FONT_PATH, FONT_SIZE)
+    # Create a smaller font for score list and input field
+    SMALL_FONT = pygame.font.Font(FONT_PATH, 15)  # Smaller font size
+
     DINO_START = pygame.transform.scale(pygame.image.load(os.path.join(DINO_DIR, "DinoStart.png")).convert_alpha(), (50, 60))
     GAME_OVER = pygame.transform.scale(pygame.image.load(os.path.join(OTHER_DIR, "GameOver.png")).convert_alpha(), (200, 50))
     RESET = pygame.transform.scale(pygame.image.load(os.path.join(OTHER_DIR, "Reset.png")).convert_alpha(), (40, 40))
@@ -112,7 +116,7 @@ def menu(screen, death_count, points=0):
 
     run = True
     score_recorded = False
-    selected_score_id = None  # Track the selected score ID for updating
+    selected_score_id = None  # Track the selected score ID for updating or deleting
     new_score_input = ""  # Buffer for new score input
 
     while run:
@@ -136,7 +140,6 @@ def menu(screen, death_count, points=0):
                             high_score = get_high_score()
                             selected_score_id = None
                             new_score_input = ""
-                            print(f"Updated score for id {selected_score_id} to {new_score_input}")
                         else:
                             print("Please enter a valid number")
                     elif event.key == pygame.K_BACKSPACE:
@@ -152,15 +155,19 @@ def menu(screen, death_count, points=0):
                     high_score = get_high_score()
                     print("High scores cleared!")
                 # Check for clicks on score list
-                scores = get_top_scores(5)  # Get top 5 scores
-                for i, score_data in enumerate(scores):
-                    score_text = FONT.render(f"ID: {i+1} Score: {score_data}", True, (0, 0, 0))
-                    score_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100 + i * 30))
+                scores = get_top_scores(5)  # Get top 5 scores as (id, score) tuples
+                for i, (score_id, score) in enumerate(scores):
+                    score_text = SMALL_FONT.render(f"ID: {score_id} Score: {score}", True, (0, 0, 0))
+                    score_rect = score_text.get_rect(topleft=(20, SCREEN_HEIGHT // 2 + 100 + i * 20))
                     if score_rect.collidepoint(event.pos):
-                        # Fetch the actual ID from the database (simplified assumption: ID matches index + 1)
-                        selected_score_id = i + 1  # Adjust based on your database indexing
-                        new_score_input = ""
-                        print(f"Selected score ID: {selected_score_id} for update")
+                        if event.button == 1:  # Left click for update
+                            selected_score_id = score_id  # Use the actual id from the database
+                            new_score_input = ""
+                            print(f"Selected score ID: {selected_score_id} for update")
+                        elif event.button == 3:  # Right click for delete
+                            delete_score(score_id)
+                            high_score = get_high_score()
+                            print(f"Deleted score with ID: {score_id}")
 
         if death_count == 0:
             text = FONT.render("Press any Key to Start", True, (0, 0, 0))
@@ -188,21 +195,26 @@ def menu(screen, death_count, points=0):
             reset_rect = RESET.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 160))
             screen.blit(RESET, reset_rect)
 
-            # Display top scores for update
+            # Display top scores on the left side with smaller font
             scores = get_top_scores(5)  # Show top 5 scores
-            for i, score in enumerate(scores):
-                score_text = FONT.render(f"ID: {i+1} Score: {score}", True, (0, 0, 0))
-                score_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100 + i * 30))
-                screen.blit(score_text, score_rect)
+            if not scores:  # Handle empty score list
+                no_scores_text = SMALL_FONT.render("No scores available", True, (0, 0, 0))
+                no_scores_rect = no_scores_text.get_rect(topleft=(20, SCREEN_HEIGHT // 2 + 100))
+                screen.blit(no_scores_text, no_scores_rect)
+            else:
+                for i, (score_id, score) in enumerate(scores):
+                    score_text = SMALL_FONT.render(f"ID: {score_id} Score: {score}", True, (0, 0, 0))
+                    score_rect = score_text.get_rect(topleft=(20, SCREEN_HEIGHT // 2 + 100 + i * 20))
+                    screen.blit(score_text, score_rect)
 
-            # Display input field if a score is selected
+            # Display input field on the left with smaller font if a score is selected
             if selected_score_id is not None:
-                input_text = FONT.render(f"Enter new score (ID {selected_score_id}): {new_score_input}", True, (0, 0, 0))
-                input_rect = input_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 250))
+                input_text = SMALL_FONT.render(f"Enter new score (ID {selected_score_id}): {new_score_input}", True, (0, 0, 0))
+                input_rect = input_text.get_rect(topleft=(20, SCREEN_HEIGHT // 2 + 250))
                 screen.blit(input_text, input_rect)
 
         pygame.display.update()
 
-    return False'''
+    return False
 
 

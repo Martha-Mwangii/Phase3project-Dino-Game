@@ -1,4 +1,4 @@
-#test_db.py
+'''#test_db.py
 import sqlite3
 
 # Define the path to the high scores database file
@@ -29,4 +29,35 @@ if __name__ == "__main__":
     print("Top 3 Scores:", top_3)# Print the list of top 3 scores to the console
 
     bottom_3 = get_bottom_scores()
-    print("Bottom 3 Scores:", bottom_3)
+    print("Bottom 3 Scores:", bottom_3)'''
+
+import sqlite3
+
+# Define the path to the high scores database file
+DB_PATH = "high_scores.db"
+
+# Define a function to retrieve the top N scores from the high_scores table
+def get_top_scores(limit=3):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, score FROM high_scores ORDER BY score DESC LIMIT ?", (limit,))
+    top_scores = cursor.fetchall()
+    conn.close()
+    return [(row[0], row[1]) for row in top_scores]  # Return list of (id, score) tuples
+
+# Define a function to retrieve the bottom N scores from the high_scores table
+def get_bottom_scores(limit=3):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, score FROM high_scores ORDER BY score ASC LIMIT ?", (limit,))
+    bottom_scores = cursor.fetchall()
+    conn.close()
+    return [(row[0], row[1]) for row in bottom_scores]  # Return list of (id, score) tuples
+
+# Execute the following code only if this script is run directly
+if __name__ == "__main__":
+    top_3 = get_top_scores()  # Get the 3 highest scores
+    print("Top 3 Scores:", [score for _, score in top_3])  # Extract just the scores for printing
+
+    bottom_3 = get_bottom_scores()
+    print("Bottom 3 Scores:", [score for _, score in bottom_3])

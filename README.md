@@ -1,6 +1,6 @@
- # Chrome Dino Game (Python Edition)
+# Chrome Dino Game 
 
-A Python-based recreation of the classic Chrome Dino Game using Pygame, featuring a dinosaur that jumps over obstacles, ducks under birds, and tracks high scores in an SQLite database. This project includes day/night transitions, sound effects, and a star-filled night sky for added immersion.
+This is a Python-based recreation of the Chrome Dino Game using Pygame, featuring a dinosaur that jumps over obstacles, ducks under birds, and tracks high scores in an SQLite database. This project includes day/night transitions, sound effects, and a star-filled night sky for added immersion.
 
 ## Features
 
@@ -80,3 +80,5 @@ Feel free to fork this repository, submit issues, or create pull requests with i
 
 ## License
 Copyright (c) 2024 Martha-Mwangii
+
+Have fun!! 🚀
