@@ -1,42 +1,30 @@
-# Import the pygame library for game development functionality
+#player.py
 import pygame
-# Import RUNNING, JUMPING, DUCKING, DEAD, and JUMP_SOUND constants from the constants module
 from constants import RUNNING, JUMPING, DUCKING, DEAD, JUMP_SOUND
 
 # Define the Dinosaur class using pygame's Sprite class to manage the player character
 class Dinosaur(pygame.sprite.Sprite):
-    # Define the initial x position of the dinosaur
-    X_POS = 80
-    # Define the initial y position (standing)
-    Y_POS = 310
-    # Define the y position when ducking
-    Y_POS_DUCK = 340
-    # Define the initial jump velocity
-    JUMP_VEL = 8.5
-    # Define the offset for ducking animation
-    DUCK_OFFSET = 10
+    X_POS = 80# Define the initial x position of the dinosaur
+    Y_POS = 320# Define the initial y position (standing)
+    Y_POS_DUCK = 340# Define the y position when ducking
+    JUMP_VEL = 8.5# Define the initial jump velocity
+    DUCK_OFFSET = 10# used to slightly adjust the position of the dinosaur when it's ducking
 
     # Initialize the Dinosaur object with a clock and audio status
     def __init__(self, clock, has_audio=False):
         super().__init__()  # Initialize the parent Sprite class
         # Load and convert all running animation images with alpha transparency
         self.run_img = [pygame.image.load(path).convert_alpha() for path in RUNNING]
-        # Load and convert the jumping image with alpha transparency
-        self.jump_img = pygame.image.load(JUMPING).convert_alpha()
-        # Load and convert all ducking animation images with alpha transparency
-        self.duck_img = [pygame.image.load(path).convert_alpha() for path in DUCKING]
-        # Load and convert the dead image with alpha transparency
-        self.dead_img = pygame.image.load(DEAD).convert_alpha()
+        self.jump_img = pygame.image.load(JUMPING).convert_alpha()#jumping 
+        self.duck_img = [pygame.image.load(path).convert_alpha() for path in DUCKING]# all ducking animation images 
+        self.dead_img = pygame.image.load(DEAD).convert_alpha()#dead image 
 
         # Calculate a scale factor based on desired sprite dimensions (50x60)
         scale_factor = 50 / 60
         # Scale all running images to 50x60 pixels
         self.run_img = [pygame.transform.scale(img, (50, 60)) for img in self.run_img]
-        # Scale the jumping image to 50x60 pixels
         self.jump_img = pygame.transform.scale(self.jump_img, (50, 60))
-        # Scale all ducking images to 50x60 pixels
         self.duck_img = [pygame.transform.scale(img, (50, 60)) for img in self.duck_img]
-        # Scale the dead image to 50x60 pixels
         self.dead_img = pygame.transform.scale(self.dead_img, (50, 60))
 
         # Initialize day and night versions of images
@@ -45,9 +33,7 @@ class Dinosaur(pygame.sprite.Sprite):
         self.day_duck_img = self.duck_img.copy()  # Store copies of day ducking images
         # Apply night tint to all running images and store copies
         self.night_run_img = [self.apply_night_tint(img.copy()) for img in self.run_img]
-        # Apply night tint to the jumping image and store a copy
         self.night_jump_img = self.apply_night_tint(self.jump_img.copy())
-        # Apply night tint to all ducking images and store copies
         self.night_duck_img = [self.apply_night_tint(img.copy()) for img in self.duck_img]
 
         # Initialize jump sound variable
@@ -95,10 +81,8 @@ class Dinosaur(pygame.sprite.Sprite):
             return
         # Get the current time in milliseconds
         current_time = pygame.time.get_ticks()
-        # Update running animation if in run state
         if self.dino_run:
             self.run()
-        # Update jumping physics if in jump state
         if self.dino_jump:
             self.jump(current_time)
         # Update ducking animation if in duck state
@@ -106,7 +90,7 @@ class Dinosaur(pygame.sprite.Sprite):
             self.duck(current_time)
 
         # Handle jump action with a 500ms cooldown
-        if user_input[pygame.K_UP] and not self.dino_jump and (current_time - self.last_jump_time > 500):
+        if user_input[pygame.K_UP] and not self.dino_jump and (current_time - self.last_jump_time > 200):
             self.dino_duck = False  # Disable ducking
             self.dino_run = False  # Disable running
             self.dino_jump = True  # Enable jumping
@@ -157,7 +141,7 @@ class Dinosaur(pygame.sprite.Sprite):
         # Increment the animation timer by the time elapsed since the last frame
         self.animation_time += self.clock.get_time()
         # Set animation speed dynamically based on frame rate (minimum 50ms)
-        animation_speed = max(50, 150 - (self.clock.get_fps() * 2))
+        animation_speed = 100 #max(50, 150 - (self.clock.get_fps() * 2))
         if self.animation_time >= animation_speed:
             self.animation_time = 0  # Reset the timer
             if self.dino_run:
@@ -182,7 +166,3 @@ class Dinosaur(pygame.sprite.Sprite):
         # Draw the current image on the screen at the rectangle position
         SCREEN.blit(self.image, self.rect)
 
-# Improvement Suggestions:
-# 1. **Animation Smoothing**: Adjust animation_speed dynamically based on game speed for smoother transitions.
-# 2. **Jump Cooldown**: Define the 500ms jump cooldown as a constant for easier tweaking.
-# 3. **State Machine**: Use an enum for states (e.g., RUN, JUMP, DUCK) instead of multiple booleans.

@@ -1,9 +1,7 @@
-# Import the random module for generating random numbers
+#obstacles.py
 import random
-# Import the pygame library for game development functionality
 import pygame
-# Import the SCREEN_WIDTH constant from the constants module for obstacle spawning
-from constants import SCREEN_WIDTH
+from constants import SCREEN_WIDTH #from the constants module for obstacle placement/appearance/creation
 
 # Define a function to scale an image to specified dimensions while preserving transparency
 def scale_image(image, width, height):
@@ -34,7 +32,7 @@ class Obstacle(pygame.sprite.Sprite):
         """Apply a night tint to the image with adjusted color and alpha blending for better visibility."""
         night_image = image.copy()  # Create a copy of the original image
         # Adjusted tint: Lighter bluish tone for better contrast against the night background (10, 20, 40)
-        tint_color = (80, 120, 140)  # Previously (50, 100, 50)
+        tint_color = (80, 120, 140) 
         # Apply alpha blending with an alpha value of 200 to let some original colors show through
         night_image.fill((*tint_color, 200), special_flags=pygame.BLEND_RGBA_MULT)
         night_image.set_colorkey((0, 0, 0))  # Set black as transparent (for sprite edges)
@@ -93,8 +91,8 @@ class Bird(Obstacle):
     def apply_night_tint(self, image):
         """Apply a night tint specific to birds with adjusted color and alpha blending."""
         night_image = image.copy()  # Create a copy of the original image
-        # Adjusted tint: Slightly brighter blue for better visibility
-        tint_color = (100, 120, 160)  # Previously (100, 100, 150)
+        # Adjusted tint: Slightly Light Greyish White for better visibility
+        tint_color = (230, 230, 230)  
         # Apply alpha blending with an alpha value of 180 for a softer effect
         night_image.fill((*tint_color, 180), special_flags=pygame.BLEND_RGBA_MULT)
         night_image.set_colorkey((0, 0, 0))  # Set black as transparent
@@ -109,20 +107,13 @@ class Bird(Obstacle):
         self.frame_count += 1  # Increment frame counter for animation timing
         # Adjust animation speed based on game speed (faster at higher speeds)
         animation_speed = max(5, 15 - (game_speed // 2))
-        if self.frame_count >= animation_speed:  # Update animation frame when threshold is reached
+        if self.frame_count >= animation_speed: #Update animation frame when threshold is reachedi.ehow many frames to wait before switching images
             self.frame_count = 0  # Reset frame counter
-            self.index = (self.index + 1) % len(self.day_images)  # Cycle through animation frames
-            # Set the image using precomputed day or night images
+            self.index = (self.index + 1) % len(self.day_images)  #Cycle through animation frames i.eSwitch to the next bird image
             self.image = self.night_images[self.index] if self.is_night else self.day_images[self.index]
 
     # Draw the bird on the screen using precomputed images
     def draw(self, SCREEN, is_night):
         """Draw the bird on the screen using precomputed images."""
         self.is_night = is_night  # Update night mode state
-        # Image is already set in update(), just draw it
-        SCREEN.blit(self.image, self.rect)
-
-# Improvement Suggestions:
-# 1. **Random Spawn Logic**: Add variance in spawn rates based on game difficulty or score.
-# 2. **Collision Tuning**: Further adjust tint colors or alpha for optimal visibility (already improved).
-# 3. **Animation Optimization**: Already precomputed; consider precomputing at game startup for all obstacles.
+        SCREEN.blit(self.image, self.rect)  # the Image is already set in update(),so its just drawn

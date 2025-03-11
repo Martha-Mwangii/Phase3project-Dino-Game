@@ -1,17 +1,13 @@
-
 #database.py
-# Import the sqlite3 module to interact with SQLite databases
-import sqlite3
+import sqlite3 # to interact with SQLite databases
 
 # Define the path to the high scores database file
 DB_PATH = "high_scores.db"
 
 # Initialize the database by creating the high_scores table if it doesn't exist
 def init_db():
-    # Establish a connection to the database file
-    conn = sqlite3.connect(DB_PATH)
-    # Create a cursor object to execute SQL commands
-    cursor = conn.cursor()
+    conn = sqlite3.connect(DB_PATH) #Establishes a connection to the database file
+    cursor = conn.cursor()#Create a cursor object to execute SQL commands
     # Execute SQL to create the high_scores table with id, score, and date columns
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS high_scores (
@@ -20,45 +16,63 @@ def init_db():
             date TEXT DEFAULT CURRENT_TIMESTAMP
         )
     ''')
-    # Commit the changes to the database
-    conn.commit()
-    # Close the database connection to free resources
-    conn.close()
+    conn.commit()# Commit the changes to the database
+    conn.close()# Close the database connection 
 
 # Add a new score to the high_scores table
 def add_score(score):
-    # Establish a connection to the database file
     conn = sqlite3.connect(DB_PATH)
-    # Create a cursor object to execute SQL commands
     cursor = conn.cursor()
     # Execute SQL to insert the score into the high_scores table
     cursor.execute("INSERT INTO high_scores (score) VALUES (?)", (score,))
-    # Commit the changes to the database
     conn.commit()
-    # Close the database connection
     conn.close()
 
 # Retrieve the highest score from the high_scores table
 def get_high_score():
-    # Establish a connection to the database file
     conn = sqlite3.connect(DB_PATH)
-    # Create a cursor object to execute SQL commands
     cursor = conn.cursor()
-    # Execute SQL to select the maximum score from the high_scores table
     cursor.execute("SELECT MAX(score) FROM high_scores")
-    # Fetch the first result (the maximum score)
-    high_score = cursor.fetchone()[0]
-    # Close the database connection
+    high_score = cursor.fetchone()[0]# Fetch the first result(max score)
+    conn.close()# Close the database connection
+    return high_score if high_score is not None else 0#Returns the high score or a zero if no score exists
+def delete_score(score_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM high_scores WHERE id = ?", (score_id,))
+    conn.commit()
     conn.close()
-    # Return the high score, or 0 if no score exists
-    return high_score if high_score is not None else 0
 
-# Improvement Suggestions:
-# 1. Connection Management: Use a context manager (with statement) to handle connections automatically.
-# 2. Error Handling: Add try-except blocks to handle database errors gracefully.
-# 3. Top N Scores: Add a function to retrieve the top N scores for display in the game.
+def clear_scores():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM high_scores")
+    conn.commit()
+    conn.close()
 
-# Improvement Suggestions:
-# 1. **Connection Management**: Use a context manager (with statement) to handle connections automatically.
-# 2. **Error Handling**: Add try-except blocks to handle database errors gracefully.
-# 3. **Top N Scores**: Add a function to retrieve the top N scores for display in the game.
+'''# Update a score for a specific ID
+def update_score(score_id, new_score):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    try:
+        cursor.execute("UPDATE high_scores SET score = ? WHERE id = ?", (new_score, score_id))
+        conn.commit()
+        if cursor.rowcount == 0:
+            print(f"Warning: No score found with id {score_id}")
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+    finally:
+        conn.close()'''
+'''def delete_score(score_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    try:
+        cursor.execute("DELETE FROM high_scores WHERE id = ?", (score_id,))
+        conn.commit()
+        if cursor.rowcount == 0:
+            print(f"Warning: No score found with id {score_id}")
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+    finally:
+        conn.close()'''
+

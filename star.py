@@ -1,9 +1,7 @@
-# Import the pygame library for game development functionality
+#star.py
 import pygame
-# Import the random module for generating random numbers
 import random
-# Import the math module for trigonometric calculations
-import math
+import math#Import the math module for trigonometric calculations
 
 # Define the Star class using pygame's Sprite class to manage night mode stars
 class Star(pygame.sprite.Sprite):
@@ -11,18 +9,13 @@ class Star(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()  # Initialize the parent Sprite class
         self.size = 6  # Size of the star (diameter in pixels)
-        # Create a surface for the star with alpha support
-        self.image = pygame.Surface((self.size, self.size), pygame.SRCALPHA)
-        # Set a random initial transparency value between 50 and 255
-        self.alpha = random.randint(50, 255)
+        self.image = pygame.Surface((self.size, self.size), pygame.SRCALPHA) #Create a surface for the star with alpha support
+        self.alpha = random.randint(50, 255) # Set a random initial transparency value between 50 and 255
         self.draw_star()  # Draw the star shape
         self.rect = self.image.get_rect()  # Create a rectangle for positioning
-        # Set a random x position within the screen width (0 to 1100)
-        self.rect.x = random.randint(0, 1100)
-        # Set a random y position between 50 and 200 pixels
-        self.rect.y = random.randint(50, 200)
-        # Set a random twinkling speed between 0.02 and 0.05
-        self.twinkle_speed = random.uniform(0.02, 0.05)
+        self.rect.x = random.randint(0, 1100)# Set a random x position within the screen width (0 to 1100)
+        self.rect.y = random.randint(50, 200)# Set a random y position between 50 and 200 pixels
+        self.twinkle_speed = random.uniform(0.02, 0.05)# Set a random twinkling speed between 0.02 and 0.05
 
     # Draw the star shape on the image surface
     def draw_star(self):
@@ -56,8 +49,3 @@ class Star(pygame.sprite.Sprite):
     def draw(self, screen):
         # Blit (draw) the star image onto the screen at its rectangle position
         screen.blit(self.image, self.rect)
-
-# Improvement Suggestions:
-# 1. **Varied Sizes**: Add random sizes (e.g., 4 to 8 pixels) for more visual depth.
-# 2. **Color Variation**: Introduce slight color tints (e.g., yellow or white variations) for realism.
-# 3. **Layering**: Add a z-index or depth effect by varying y-positions and sizes.
